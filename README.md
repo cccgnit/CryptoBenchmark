@@ -1,2 +1,2 @@
 # CryptoBenchmarking
- Performance Benchmarking and Analysis of Encryption Algorithms or Cryptographic in Embedded System
+ Performance Benchmarking and Analysing of Encryption Algorithms or Cryptographic in Embedded System
