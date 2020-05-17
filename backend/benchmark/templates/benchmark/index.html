@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <title>Xilinz ZYNQ AX7010 Crypto Benchmark</title>
+    </head>
+    <body>
+        <p>This is my page</p>
+        {% if cipher_result_list %}
+            <ul>
+            {% for cipher_result in cipher_result_list %}
+                <li><a href="111">{{ cipher_result.cipher }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No polls are available.</p>
+        {% endif %}
+    </body>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    {# The citation order of the following three is fixed #}
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</html>
