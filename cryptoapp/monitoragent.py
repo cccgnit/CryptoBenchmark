@@ -190,6 +190,7 @@ if __name__ == '__main__':
     django_stat = conn_django_test()
     while True:
         payload = get_system_info()
+        # print(payload)
         # send to the Django server
         if django_stat:
             res = post_django(payload)

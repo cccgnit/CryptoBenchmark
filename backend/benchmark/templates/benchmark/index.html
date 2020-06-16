@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-        <title>Xilinz ZYNQ AX7010 Crypto Benchmark</title>
+        <title>AX7010 Crypto Benchmark</title>
     </head>
+
     <body>
-        <p>This is my page</p>
-        {% if cipher_result_list %}
-            <ul>
-            {% for cipher_result in cipher_result_list %}
-                <li><a href="111">{{ cipher_result.cipher }}</a></li>
+        <p style="margin-left:44%; margin-top:25px; font-size:20px;">加密算法及配置列表</p>
+        {% if cipher_list %}
+            <ol>
+            {% for cipher in cipher_list %}
+                <li style="margin-left: 675px"><a href="http://169.254.91.147:8000/result/{{ cipher }}/frontend">{{ cipher }}</a></li>
             {% endfor %}
-            </ul>
+            </ol>
         {% else %}
             <p>No polls are available.</p>
         {% endif %}

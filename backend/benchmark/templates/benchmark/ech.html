@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <title>AX7010 Crypto Benchmark</title>
+    </head>
+
+    <body style="height: 100%; margin: 0">
+        {% csrf_token %}
+        {% comment %} <form action="{% url 'ptlnx_serial' %}" method="post" id="registSubmit">
+            {% csrf_token %}
+            <input type="submit" value="Vote">
+        </form> {% endcomment %}
+        <p style="position: absolute; margin-left:300px; margin-top:25px; font-size:20px;"> {{ cipher }} </p>
+        <button class="btn btn-primary" type="button" style="position: absolute; margin-left:685px; margin-top:25px" data-type="reload" onclick="run_cipher()">执行</button>
+        <button class="btn btn-success" type="button" style="position: absolute; margin-left:765px; margin-top:25px" data-type="reload" onclick="window.location.reload();">刷新</button>
+        <div id="elapsedTime_chart" style="position: absolute; margin-left:10px; margin-top: 85px; width: 400px; height: 40%"></div>
+        <div id="throughput_chart" style="position: absolute; margin-left:380px; margin-top: 85px; width: 400px; height: 40%"></div>
+        <div id="cpuUtilPct_chart" style="position: absolute; margin-left:10px; margin-top: 385px; width: 400px; height: 40%"></div>
+        <div id="memUsed_chart" style="position: absolute; margin-left:380px; margin-top: 385px; width: 400px; height: 40%"></div>
+        <div id="sys_cpuUtilPct_chart" style="position: absolute; margin-left:750px; margin-top: 85px; width: 400px; height: 40%"></div>
+        <div id="sys_memUsedPct_chart" style="position: absolute; margin-left:1110px; margin-top: 85px; width: 400px; height: 40%"></div>
+        <div id="sys_getTotal_chart" style="position: absolute; margin-left:750px; margin-top: 385px; width: 760px; height: 40%"></div>
+    </body>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=0qCEShi3t0kdle7HXxfyYnrj9L6PmyBu&__ec_v__=20190126"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+    <script type="text/javascript">
+var cipher = "{{ cipher }}"
+{# run cipher in AX7010 #}
+function run_cipher(){
+    var url = "http://169.254.91.147:8000/result/" + "{{ cipher }}" + "/run_cipher/";
+    var request = new XMLHttpRequest();
+    request.open("GET", url);
+    request.send("")
+    var deley = 5000;
+    for(var t = Date.now(); Date.now() - t <= deley;);
+    window.location.reload();
+}
+{# elapsedTime Chart #}
+var elapsedTime_dom = document.getElementById("elapsedTime_chart");
+var elapsedTime_chart = echarts.init(elapsedTime_dom);
+elapsedTime_option = {
+    title: {
+        text: '近十次算法调用延时ms',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            animation: false
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: {{ elapsedTime_list }},
+        type: 'line'
+    }]
+};
+elapsedTime_chart.setOption(elapsedTime_option, true);
+{# throughput Chart #}
+var throughput_dom = document.getElementById("throughput_chart");
+var throughput_chart = echarts.init(throughput_dom);
+throughput_option = {
+    title: {
+        text: '近十次算法调用吞吐量Mbytes/s',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            animation: false
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: {{ throughput_list }},
+        type: 'line'
+    }]
+};
+throughput_chart.setOption(throughput_option, true);
+{# cpuUtilPct Chart #}
+var cpuUtilPct_dom = document.getElementById("cpuUtilPct_chart");
+var cpuUtilPct_chart = echarts.init(cpuUtilPct_dom);
+cpuUtilPct_option = {
+    title: {
+        text: '近十次算法调用CPU利用率%',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            animation: false
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: {{ cpuUtilPct_list }},
+        type: 'line'
+    }]
+};
+cpuUtilPct_chart.setOption(cpuUtilPct_option, true);
+{# memUsed Chart #}
+var memUsed_dom = document.getElementById("memUsed_chart");
+var memUsed_chart = echarts.init(memUsed_dom);
+memUsed_option = {
+    title: {
+        text: '近十次算法调用内存使用量Mb',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            animation: false
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: {{ memUsed_list }},
+        type: 'line'
+    }]
+};
+memUsed_chart.setOption(memUsed_option, true);
+{# sys cpuUtilPct Chart #}
+var sys_cpuUtilPct_dom = document.getElementById("sys_cpuUtilPct_chart");
+var sys_cpuUtilPct_chart = echarts.init(sys_cpuUtilPct_dom);
+sys_cpuUtilPct_option = {
+    title: {
+        text: 'AX7010 CPU使用率%',
+        left: 'center',
+        textStyle: {"color": "#0B8DB5"}
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            animation: false
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: {{ sys_cpuUtilPct_list }},
+        type: 'line'
+    }]
+};
+sys_cpuUtilPct_chart.setOption(sys_cpuUtilPct_option, true);
+{# sys memUsedPct Chart #}
+var sys_memUsedPct_dom = document.getElementById("sys_memUsedPct_chart");
+var sys_memUsedPct_chart = echarts.init(sys_memUsedPct_dom);
+sys_memUsedPct_option = {
+    title: {
+        text: 'AX7010内存使用率%',
+        left: 'center',
+        textStyle: {"color": "#0B8DB5"}
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            animation: false
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: {{ sys_memUsedPct_list }},
+        type: 'line'
+    }]
+};
+sys_memUsedPct_chart.setOption(sys_memUsedPct_option, true);
+{# sys getTotal Chart #}
+var sys_getTotal_dom = document.getElementById("sys_getTotal_chart");
+var sys_getTotal_chart = echarts.init(sys_getTotal_dom);
+sys_getTotal_option = {
+    // backgroundColor: '#EAEAEA',
+    title: {
+        text: 'AX7010网络收发字节数Bytes',
+        left: 'center',
+        textStyle: {"color": "#0B8DB5"}
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            animation: false
+        }
+    },
+    xAxis: {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name: '接收流量',
+            data: {{ sys_getTotal_list }},
+            type: 'line'
+        },
+        {
+            name: '发送流量',
+            data: {{ sys_sentTotal_list }},
+            type: 'line'
+        }
+    ]
+};
+sys_getTotal_chart.setOption(sys_getTotal_option, true);
+    </script>
+</html>

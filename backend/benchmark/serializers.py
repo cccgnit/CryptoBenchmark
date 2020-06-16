@@ -11,6 +11,12 @@ class CipherResultSerializer(serializers.ModelSerializer):
                   'cpuUtilPct', 'memUsed', 'memUsedPct',)
 
 
+class CipherListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CipherResult
+        fields = ('cipher',)
+
+
 class SystemInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemInfo

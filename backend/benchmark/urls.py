@@ -14,7 +14,5 @@ router.register(r'^system', SystemInfoViewSet, basename="SystemInfo")
 urlpatterns = [
     # ex: /result/ or /system/
     url('', include(router.urls)),
-    # ex: /index/
-    url('index', views.index, name='index'),
     url('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
