@@ -1,0 +1,7 @@
+vivado==2017.4
+petalinux==2017.4
+python3==3.5.2
+openssl==1.0.2
+gmssl==3.2.1
+simonspeckciphers==1.0.0
+GNU-Make==4.2.1
